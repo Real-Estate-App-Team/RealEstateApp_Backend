@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -80,8 +81,13 @@ public class CategoryService {
               throw new ResourceAccessException("");//todo  ex olustur
         }
               //todo built in olna bakailmayacak
+        Category category =  categoryRepository.findById(id).orElseThrow(()->{
+            throw new ResourceAccessException("");//todo
+        });
 
-        Category updated = categoryMapper.toCategory(categoryRequest);
+              categoryRequest.setId(id);
+        Category updated = categoryMapper.toUpdateResponse(categoryRequest,category);
+
         categoryRepository.save(updated);
 
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -96,8 +102,9 @@ public class CategoryService {
             throw new ResourceAccessException("");//todo
         });
         if (!categoryRepository.findById(id).get().isBuiltIn()){
+            CategoryResponse categoryResponse=categoryMapper.toResponse(deleted);
             categoryRepository.deleteById(id);
-            return new ResponseEntity<>(categoryMapper.toResponse(deleted),HttpStatus.CREATED);
+            return new ResponseEntity<>(categoryResponse,HttpStatus.ACCEPTED);//todo postman siliyor ama cevap yok
 
         }
         return new ResponseEntity<>(categoryMapper.toResponse(deleted),HttpStatus.NOT_FOUND);
@@ -182,7 +189,7 @@ public class CategoryService {
                 .title(categoryRequest.getTitle())
                 .builtIn(categoryRequest.isBuiltIn())
                 .createAt(categoryRequest.getCreateAt())
-                .isActive(categoryRequest.isActive())
+                .active(categoryRequest.isActive())
                 .categoryPropertyKeys(categoryRequest.getCategoryPropertyKeys())
                 .updateAt(categoryRequest.getUpdateAt())
                 //todo

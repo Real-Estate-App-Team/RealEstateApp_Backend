@@ -26,7 +26,7 @@ public class CategoryResponse extends BaseEntityResponse implements Serializable
     private boolean builtIn;
     private int seq;
     private String slug;
-    private boolean isActive=true;
+    private boolean active;
     private Set<Advert> advertSet;
     private Set<CategoryPropertyKey> categoryPropertyKeys;
     //

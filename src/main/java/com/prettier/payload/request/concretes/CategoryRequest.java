@@ -35,7 +35,7 @@ public class CategoryRequest extends BaseEntityRequest implements Serializable {
     private String slug;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive;
+    private boolean active;
 
 
     private Set<Advert> advertSet;
